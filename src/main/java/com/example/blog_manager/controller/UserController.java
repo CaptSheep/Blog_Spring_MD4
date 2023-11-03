@@ -43,12 +43,12 @@ public class UserController {
             }
         }
         if (user.getRoles() != null) {
-            Role role = roleService.findByName("ROLE_ADMIN");
+            Role role = roleService.findByName("ROLE_USER");
             Set<Role> roles = new HashSet<>();
             roles.add(role);
             user.setRoles(roles);
         } else {
-            Role role1 = roleService.findByName("ROLE_USER");
+            Role role1 = roleService.findByName("ROLE_ADMIN");
             Set<Role> roles1 = new HashSet<>();
             roles1.add(role1);
             user.setRoles(roles1);
