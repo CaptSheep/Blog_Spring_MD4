@@ -1,6 +1,7 @@
 package com.example.blog_manager.model;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
 public class User {
@@ -11,13 +12,16 @@ public class User {
     private String password;
     private String checkPassword;
     private Boolean isEnable = true;
-    @ManyToOne
-    Role roles;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user_role",
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private Set<Role> roles;
 
     public User() {
     }
 
-    public User(Long id, String userName, String password, String checkPassword, Boolean isEnable, Role roles) {
+    public User(Long id, String userName, String password, String checkPassword, Boolean isEnable, Set<Role> roles) {
         this.id = id;
         this.userName = userName;
         this.password = password;
@@ -66,11 +70,11 @@ public class User {
         isEnable = enable;
     }
 
-    public Role getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
-    public void setRoles(Role roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 }
