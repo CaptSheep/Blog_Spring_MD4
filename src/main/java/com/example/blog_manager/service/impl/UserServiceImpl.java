@@ -1,7 +1,9 @@
 package com.example.blog_manager.service.impl;
 
 import com.example.blog_manager.model.User;
+import com.example.blog_manager.repository.IUserRepository;
 import com.example.blog_manager.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -11,14 +13,17 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
+    @Autowired
+    IUserRepository iUserRepository;
+
     @Override
     public void save(User user) {
-
+        iUserRepository.save(user);
     }
 
     @Override
     public Iterable<User> findAll() {
-        return null;
+        return iUserRepository.findAll();
     }
 
     @Override
