@@ -41,6 +41,10 @@ public class UserController {
             if(item.getUserName().equals(user.getUserName())){
                 return new ResponseEntity<>(HttpStatus.SEE_OTHER);
             }
+            if(userService.isCorrectConfirmPassword(user)){
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+            }
         }
         if (user.getRoles() != null) {
             Role role = roleService.findByName("ROLE_USER");
