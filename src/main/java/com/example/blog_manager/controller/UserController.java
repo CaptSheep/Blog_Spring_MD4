@@ -1,17 +1,23 @@
 package com.example.blog_manager.controller;
 
+import com.example.blog_manager.model.JwtResponse;
 import com.example.blog_manager.model.Role;
 import com.example.blog_manager.model.User;
+import com.example.blog_manager.service.impl.JwtService;
 import com.example.blog_manager.service.impl.RoleServiceImpl;
 import com.example.blog_manager.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -28,6 +34,12 @@ public class UserController {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+    @Autowired
+    AuthenticationManager authenticationManager;
+
+    @Autowired
+    JwtService jwtService;
+
     @GetMapping("")
     public ResponseEntity<Iterable<User>> listUser(){
       Iterable<User> listUser = userService.findAll();
@@ -38,7 +50,7 @@ public class UserController {
     public ResponseEntity<User> register(@RequestBody User user){
         Iterable<User> listUser = userService.findAll();
         for(User item : listUser){
-            if(item.getUserName().equals(user.getUserName())){
+            if(item.getUsername().equals(user.getUsername())){
                 return new ResponseEntity<>(HttpStatus.SEE_OTHER);
             }
         }
@@ -54,8 +66,18 @@ public class UserController {
             user.setRoles(roles1);
         }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setCheckPassword(passwordEncoder.encode(user.getCheckPassword()));
+        user.setConfirm_password(passwordEncoder.encode(user.getConfirm_password()));
         userService.save(user);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user){
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(),user.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtService.generateTokenLogin(authentication);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        User currentUser = userService.findByUsername(user.getUsername());
+        return ResponseEntity.ok(new JwtResponse(jwt, currentUser.getId(), userDetails.getUsername(), userDetails.getAuthorities()));
     }
 }
