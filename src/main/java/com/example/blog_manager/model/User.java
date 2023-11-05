@@ -8,9 +8,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userName;
+    private String username;
     private String password;
-    private String checkPassword;
+    private String confirm_password;
     private Boolean isEnable = true;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
@@ -23,12 +23,13 @@ public class User {
 
     public User(Long id, String userName, String password, String checkPassword, Boolean isEnable, Set<Role> roles) {
         this.id = id;
-        this.userName = userName;
+        this.username = userName;
         this.password = password;
-        this.checkPassword = checkPassword;
+        this.confirm_password = checkPassword;
         this.isEnable = isEnable;
         this.roles = roles;
     }
+
 
     public void setId(Long id) {
         this.id = id;
@@ -38,12 +39,12 @@ public class User {
         return id;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -54,12 +55,12 @@ public class User {
         this.password = password;
     }
 
-    public String getCheckPassword() {
-        return checkPassword;
+    public String getConfirm_password() {
+        return confirm_password;
     }
 
-    public void setCheckPassword(String checkPassword) {
-        this.checkPassword = checkPassword;
+    public void setConfirm_password(String confirm_password) {
+        this.confirm_password = confirm_password;
     }
 
     public Boolean getEnable() {

@@ -1,6 +1,5 @@
 package com.example.blog_manager.model;
 
-import com.example.blog_manager.model.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,7 +36,7 @@ public class UserPrinciple implements UserDetails {
 
         return new UserPrinciple(
                 user.getId(),
-                user.getUserName(),
+                user.getUsername(),
                 user.getPassword(),
                 authorities
         );
